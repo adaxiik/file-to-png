@@ -40,7 +40,6 @@ void writePNG(const char* filename, Pixel* pixels, size_t size)
 
     png_init_io(png, fp);
     png_set_IHDR(png, info, size, size, 8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-    //png_set_compression_level(png, 9);
     png_write_info(png, info);
     png_byte* row = (png_byte*)malloc(3 * size * sizeof(png_byte));
     if (!row)
@@ -68,7 +67,6 @@ void writePNG(const char* filename, Pixel* pixels, size_t size)
 }
 
 Pixel* readPNG(const char* filename, size_t* sizeOfImage){
-    // http://zarb.org/~gc/html/libpng.html
     FILE* fp = fopen(filename, "rb");
     if (!fp)
     {

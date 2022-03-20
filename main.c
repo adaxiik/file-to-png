@@ -80,19 +80,38 @@ void saveFile(const char* filename, char* buffer){
 
 int main(int argc, char const *argv[])
 {
-    File file = loadFile("filetopng");
-    
-    printf("Writing %lu bytes to image %lu x %lu\n",file.original_size,file.imageDimension,file.imageDimension); 
-    writePNG("test.png", (Pixel*)file.buffer, file.imageDimension);
 
-    free(file.buffer);
+    if (argc != 4)
+        goto usage;
 
 
-    // size_t size;
-    // Pixel* pixels = readPNG("test.png", &size);
-    // printf("Read %lu x %lu image\n", size, size);
-    // saveFile("main_revive.c", (char*)pixels);
-    // free(pixels);
+    if (!strcmp(argv[1], "-t")){
+        printf("Converting to .png\n");
+
+        File file = loadFile(argv[2]);
+        printf("Writing %lu bytes to image %lu x %lu\n",file.original_size,file.imageDimension,file.imageDimension); 
+        writePNG(argv[3], (Pixel*)file.buffer, file.imageDimension);
+        free(file.buffer);
+    }
+    else if (!strcmp(argv[1], "-f")){
+        printf("Converting from .png\n");
+        
+        size_t size;
+        Pixel* pixels = readPNG(argv[2], &size);
+        printf("Read %lu x %lu image\n", size, size);
+        saveFile(argv[3], (char*)pixels);
+        free(pixels);
+
+    }
+    else
+        goto usage;
+
+    return 0;
+
+    usage:
+        fprintf(stderr, "Usage: %s <mode> <input> <output>\n", argv[0]);
+        fprintf(stderr,"<mode> can be -t (to .png) or -f (from .png)\n");
+        exit(EXIT_FAILURE);
 
     return 0;
 }
