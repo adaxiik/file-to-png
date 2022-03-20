@@ -52,7 +52,11 @@ File loadFile(const char* filename){
         exit(EXIT_FAILURE);
     }
     //preappend size
-    memcpy(output.buffer, &output.original_size, sizeof(size_t));
+    size_t* s = (size_t*)output.buffer;
+    *s = output.original_size;
+
+    
+    
     //read file
     fread(output.buffer+sizeof(size_t), output.original_size, sizeof(char), f);
     fclose(f);
@@ -63,8 +67,8 @@ File loadFile(const char* filename){
 }
 
 void saveFile(const char* filename, char* buffer){
-    size_t fileSize;
-    memcpy(&fileSize, buffer, sizeof(size_t));
+    size_t fileSize = *(size_t*)buffer;
+    
     printf("Reading %lu bytes\n", fileSize);
 
     FILE* f = fopen(filename, "wb");
